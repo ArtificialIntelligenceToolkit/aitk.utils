@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# *************************************
-# jyrobot: Python robot simulator
+# ***********************************************************
+# aitk.utils: Python utils for AI
 #
-# Copyright (c) 2021 Calysto Developers
+# Copyright (c) 2021 AITK Developers
 #
-# https://github.com/Calysto/jyrobot
+# https://github.com/ArtificialIntelligenceToolkit/aitk.utils
 #
-# *************************************
+# ***********************************************************
 
-version_info = (0, 0, 0)
+version_info = (0, 0, 1)
 __version__ = ".".join(map(str, version_info))
