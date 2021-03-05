@@ -20,7 +20,7 @@ except Exception:
 def in_colab():
     return _in_colab
 
-def joystick(*args, **kwargs):
+def make_joystick(*args, **kwargs):
     if in_colab():
         return NoJoystick(*args, **kwargs)
     elif has_ipycanvas():
@@ -28,4 +28,4 @@ def joystick(*args, **kwargs):
     elif has_ipywidgets():
         return NoJoystick(*args, **kwargs)
     else:
-        raise Exception("please install ipycanvas, or ipywidgets to use joystick")
+        raise Exception("please install ipycanvas, or ipywidgets to use make_joystick")
