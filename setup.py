@@ -47,7 +47,6 @@ setup_args = dict(
     description="A set of generic tools for AI",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    #namespace_packages=["aitk"],
     packages=setuptools.find_namespace_packages(include=['aitk.*']),
     install_requires=["setuptools"],
     python_requires=">=3.6",
