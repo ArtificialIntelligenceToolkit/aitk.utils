@@ -52,8 +52,8 @@ class Joystick():
 
     def handle_mouse_move(self, x, y):
         if self.state == "down":
-            self.function((self.width/2 - x) / (self.width/2),
-                          (self.height/2 - y) / (self.height/2))
+            self.function((self.height/2 - y) / (self.height/2),
+                          (self.width/2 - x) / (self.width/2))
             with hold_canvas(self.canvas):
                 self.clear()
                 self.canvas.stroke_style = "black"
@@ -101,8 +101,6 @@ class NoJoystick():
             "⬋ ⬇ ⬊",
         ]
 
-        # Note: rotate is reversed to make it match up with the slider
-        # direction
         self.movement = [
             [(1.0, -1.), (1.0, -.5), (1.0, 0.0), (1.0, 0.5), (1.0, 1.0)],
             [(0.5, -1.), (0.5, -.5), (0.5, 0.0), (0.5, 0.5), (0.5, 1.0)],
@@ -139,7 +137,7 @@ class NoJoystick():
                 grid_template_rows='40px 40px 40px 40px 40px',
                 grid_template_columns='40px 40px 40px 40px 40px',
                 grid_gap='0px 0px',
-                overflow="inherit",
+                overflow="intial",
             )
         )
 
@@ -152,6 +150,17 @@ class NoJoystick():
             width="min-content",
             height="240px",
         )
+
+        self.translate_slider.observe(self.on_translate_change,
+                                      names='value')
+        self.rotate_slider.observe(self.on_rotate_change,
+                                   names='value')
+
+    def on_translate_change(self, change):
+        self.function(change['new'], None)
+
+    def on_rotate_change(self, change):
+        self.function(None, -change['new'])
 
     def create_move(self, row, col):
         def on_click(button):
