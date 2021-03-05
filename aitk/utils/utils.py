@@ -15,7 +15,7 @@ try:
 except ImportError:
     clear_ouput = None
 
-def gallery(images, border_width=1, background_color=(255, 255, 255)
+def gallery(images, border_width=1, background_color=(255, 255, 255),
             format=None, clear=True):
     """
     Construct a gallery of images
