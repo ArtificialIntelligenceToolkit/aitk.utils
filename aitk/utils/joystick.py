@@ -10,22 +10,34 @@
 
 import math
 
-from ipywidgets import (
-    Button,
-    Layout,
-    GridBox,
-    ButtonStyle,
-    FloatSlider,
-    HBox,
-    VBox,
-    GridspecLayout,
-    TwoByTwoLayout,
-)
-
+try:
+    from ipywidgets import (
+        Button,
+        Layout,
+        GridBox,
+        ButtonStyle,
+        FloatSlider,
+        HBox,
+        VBox,
+        GridspecLayout,
+        TwoByTwoLayout,
+    )
+    _has_ipywidgets = True
+except ImportError:
+    _has_ipywidgets = False
+    
 try:
     from ipycanvas import Canvas, hold_canvas
+    _has_ipycanvas = True
 except ImportError:
-    pass
+    _has_ipycanvas = False
+
+
+def has_ipycanvas():
+    return _has_ipycanvas
+
+def has_ipywidgets():
+    return _has_ipywidgets
 
 class Joystick():
     def __init__(self, width=250, height=250, function=print):
@@ -92,6 +104,9 @@ class Joystick():
 
 class NoJoystick():
     def __init__(self, width=250, height=250, function=print):
+        """
+        FIXME: width and height are currently ignored.
+        """
         self.function = function
         self.arrows = [
             "⬉ ⬆ ⬈",
