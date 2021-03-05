@@ -9,4 +9,4 @@
 # ***********************************************************
 
 from .utils import gallery
-from .joystick import Joystick
+from .joystick import Joystick, NoJoystick

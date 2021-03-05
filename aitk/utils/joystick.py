@@ -10,6 +10,18 @@
 
 import math
 
+from ipywidgets import (
+    Button,
+    Layout,
+    GridBox,
+    ButtonStyle,
+    FloatSlider,
+    HBox,
+    VBox,
+    GridspecLayout,
+    TwoByTwoLayout,
+)
+
 try:
     from ipycanvas import Canvas, hold_canvas
 except ImportError:
@@ -73,3 +85,80 @@ class Joystick():
         self.clear()
         self.canvas.fill_style = "black"
         self.canvas.fill_circle(self.width/2, self.height/2, self.width/10)
+
+    def watch(self):
+        return self.canvas
+
+
+class NoJoystick():
+    def __init__(self, width=250, height=250, function=print):
+        self.function = function
+        self.arrows = [
+            "⬉ ⬆ ⬈",
+            " ╲｜╱ ",
+            "⬅－⊙－➡",
+            " ╱｜╲ ",
+            "⬋ ⬇ ⬊",
+        ]
+
+        # Note: rotate is reversed to make it match up with the slider
+        # direction
+        self.movement = [
+            [(1.0, -1.), (1.0, -.5), (1.0, 0.0), (1.0, 0.5), (1.0, 1.0)],
+            [(0.5, -1.), (0.5, -.5), (0.5, 0.0), (0.5, 0.5), (0.5, 1.0)],
+            [(0.0, -1.), (0.0, -.5), (0.0, 0.0), (0.0, 0.5), (0.0, 1.0)],
+            [(-.5, -1.), (-.5, -.5), (-.5, 0.0), (-.5, 0.5), (-.5, 1.0)],
+            [(-1., -1.), (-1., -.5), (-1., 0.0), (-1., 0.5), (-1., 1.0)],
+        ]
+
+        # Make the widgets:
+        layout = Layout(height="35px", width="35px")
+        self.buttons = []
+        for row in range(5):
+            for col in range(5):
+                button = Button(description=self.arrows[row][col], layout=layout)
+                button.on_click(self.create_move(row, col))
+                self.buttons.append(button)
+
+        self.rotate_slider = FloatSlider(
+            min=-1, max=1, step=0.1,
+            continuous_update=True,
+            readout=False,
+            layout=Layout(width="200px", height="30px"))
+
+        self.translate_slider = FloatSlider(
+            min=-1, max=1, step=0.1,
+            orientation="vertical",
+            continuous_update=True,
+            readout=False,
+            layout=Layout(width="30px"))
+
+        self.array = GridBox(
+            children=self.buttons,
+            layout=Layout(
+                grid_template_rows='40px 40px 40px 40px 40px',
+                grid_template_columns='40px 40px 40px 40px 40px',
+                grid_gap='0px 0px',
+                overflow="inherit",
+            )
+        )
+
+        self.controls = TwoByTwoLayout(
+            top_left=self.translate_slider,
+            top_right=self.array,
+            bottom_right=self.rotate_slider,
+            justify_items='center',
+            align_items='top',
+            width="min-content",
+            height="240px",
+        )
+
+    def create_move(self, row, col):
+        def on_click(button):
+            translate, rotate = self.movement[row][col]
+            self.translate_slider.value = translate
+            self.rotate_slider.value = rotate
+        return on_click
+
+    def watch(self):
+        return self.controls
