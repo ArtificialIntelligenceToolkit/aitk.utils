@@ -104,6 +104,8 @@ class Joystick():
         self.reset()
 
     def reset(self):
+        # translate, rotate, quiet
+        self.function(0, 0, True)
         self.clear()
         self.canvas.fill_style = "black"
         self.canvas.fill_circle(self.width/2, self.height/2, self.width/10)
