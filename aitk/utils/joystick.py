@@ -40,7 +40,13 @@ def has_ipywidgets():
     return _has_ipywidgets
 
 class Joystick():
-    def __init__(self, width=250, height=250, function=print):
+    def __init__(self, scale=(1.0, 1.0), width=250, height=250, function=print):
+        """
+        Args:
+            scale: (translate_scale, rotate_scale)
+        """
+        self.translate_scale = scale[0]
+        self.rotate_scale = scale[1]
         self.state = "up"
         self.width = width
         self.height = height
@@ -49,6 +55,8 @@ class Joystick():
         self.canvas.on_mouse_move(self.handle_mouse_move)
         self.canvas.on_mouse_down(self.handle_mouse_down)
         self.canvas.on_mouse_up(self.handle_mouse_up)
+        self.canvas.layout.min_width = "%spx" % self.width
+        self.canvas.layout.max_height = "%spx" % self.height
         # Draw blank joystick:
         self.reset()
 
@@ -64,8 +72,10 @@ class Joystick():
 
     def handle_mouse_move(self, x, y):
         if self.state == "down":
-            self.function((self.height/2 - y) / (self.height/2),
-                          (self.width/2 - x) / (self.width/2))
+            self.function(((self.height/2 - y) / (self.height/2))
+                          * self.translate_scale,
+                          ((self.width/2 - x) / (self.width/2))
+                          * self.rotate_scale)
             with hold_canvas(self.canvas):
                 self.clear()
                 self.canvas.stroke_style = "black"
@@ -90,23 +100,32 @@ class Joystick():
 
     def handle_mouse_up(self, x, y):
         self.state = "up"
+        self.function(0, 0)
         self.reset()
 
     def reset(self):
-        self.function(0, 0)
         self.clear()
         self.canvas.fill_style = "black"
         self.canvas.fill_circle(self.width/2, self.height/2, self.width/10)
 
     def watch(self):
+        display(self.canvas)
+
+    def get_widget(self):
         return self.canvas
 
 
 class NoJoystick():
-    def __init__(self, width=250, height=250, function=print):
+    def __init__(self, scale=(1.0, 1.0), width=250, height=250, function=print):
         """
         FIXME: width and height are currently ignored.
+
+        Args:
+            scale: (translate_scale, rotate_scale)
         """
+        self.translate_scale = scale[0]
+        self.rotate_scale = scale[1]
+
         self.function = function
         self.arrows = [
             "⬉ ⬆ ⬈",
@@ -172,10 +191,10 @@ class NoJoystick():
                                    names='value')
 
     def on_translate_change(self, change):
-        self.function(change['new'], None)
+        self.function(change['new'] * self.translate_scale, None)
 
     def on_rotate_change(self, change):
-        self.function(None, -change['new'])
+        self.function(None, -change['new'] * self.rotate_scale)
 
     def create_move(self, row, col):
         def on_click(button):
@@ -185,4 +204,7 @@ class NoJoystick():
         return on_click
 
     def watch(self):
+        display(self.controls)
+
+    def get_widget(self):
         return self.controls
