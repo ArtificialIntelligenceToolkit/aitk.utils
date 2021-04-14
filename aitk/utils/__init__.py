@@ -11,6 +11,7 @@
 from ._version import __version__
 from .utils import gallery
 from .joystick import Joystick, NoJoystick, has_ipywidgets, has_ipycanvas
+from .datasets import get_dataset
 
 try:
     _in_colab = 'google.colab' in str(get_ipython())

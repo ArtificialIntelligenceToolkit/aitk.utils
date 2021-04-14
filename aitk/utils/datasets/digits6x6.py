@@ -38,4 +38,6 @@ def get():
             break
         if len(digit) > 0:
             data.append(digit)
-    return np.array(data)    
+    array = np.array(data)
+    array = array.reshape((240, 6, 6))
+    return array
