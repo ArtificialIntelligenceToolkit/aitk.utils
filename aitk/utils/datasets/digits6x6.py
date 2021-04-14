@@ -21,6 +21,11 @@ _filename = get_file(
 
 DATA_DIR = os.path.splitext(_filename)[0]
 
+def onehot(num):
+    retval = [0] * 10
+    retval[num] = 1
+    return retval
+
 def get():
     """Each digit is represented by a 6x6 grid of 1's and 0's separated by blank lines."""
     filename = DATA_DIR + ".data"
@@ -39,5 +44,6 @@ def get():
         if len(digit) > 0:
             data.append(digit)
     array = np.array(data)
-    array = array.reshape((240, 6, 6))
-    return array
+    inputs = array.reshape((240, 6, 6))
+    targets = np.array([onehot(v) for v in list(range(10)) * 24])
+    return inputs, targets
