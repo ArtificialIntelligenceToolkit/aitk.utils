@@ -27,4 +27,6 @@ def get_dataset(dataset):
     get = None
     if dataset == "digits6x6":
         from .digits6x6 import get
+    elif dataset == "dogs-vs-cats":
+        from .dogs_vs_cats import get
     return get()
