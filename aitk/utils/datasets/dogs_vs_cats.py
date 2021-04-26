@@ -28,8 +28,8 @@ def make_npy(filename, match_filename):
     print("Creating %s..." % filename)
     # create npy file
     arrays = []
-    for filename in glob.glob(match_filename):
-        image = Image.open(filename)
+    for file in glob.glob(match_filename):
+        image = Image.open(file)
         array = np.array(image, dtype="float16") / 255.0
         arrays.append(array)
     np_array = np.array(arrays)
