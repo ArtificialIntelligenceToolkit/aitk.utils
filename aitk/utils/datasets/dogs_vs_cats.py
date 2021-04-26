@@ -62,4 +62,4 @@ def get():
         np.save(cats_filename, cats)
     else:
         cats = np.load(cats_filename)
-    return cats, dogs
+    return dogs, cats
