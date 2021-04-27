@@ -153,8 +153,8 @@ def get_file(
         ProgressTracker.progbar.close()
         ProgressTracker.progbar = None
 
-    if extract:
-        _extract_archive(fpath, datadir, archive_format)
+        if extract:
+            _extract_archive(fpath, datadir, archive_format)
 
     return fpath
 
