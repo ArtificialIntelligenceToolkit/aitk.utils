@@ -15,7 +15,7 @@ from .utils import get_file
 
 _filename = get_file(
     "digits6x6.zip",
-    "https://media.githubusercontent.com/media/Calysto/conx-data/master/digits6x6/digits6x6.zip",
+    "https://media.githubusercontent.com/media/ArtificialIntelligenceToolkit/datasets/master/digits6x6/digits6x6.zip",
     extract=True,
 )
 

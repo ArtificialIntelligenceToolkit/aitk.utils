@@ -17,7 +17,7 @@ from .utils import get_file
 
 _filename = get_file(
     "dogs-vs-cats.tar.gz",
-    "https://media.githubusercontent.com/media/Calysto/conx-data/master/dogs-vs-cats/dogs-vs-cats.tar.gz",
+    "https://media.githubusercontent.com/media/ArtificialIntelligenceToolkit/datasets/master/dogs-vs-cats/dogs-vs-cats.tar.gz",
     extract=True,
 )
 
