@@ -181,10 +181,7 @@ class NoJoystick():
             top_left=self.translate_slider,
             top_right=self.array,
             bottom_right=self.rotate_slider,
-            justify_items='center',
-            align_items='top',
             width="min-content",
-            height="240px",
         )
 
         self.translate_slider.observe(self.on_translate_change,
