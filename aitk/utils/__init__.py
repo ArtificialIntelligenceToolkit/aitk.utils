@@ -24,6 +24,15 @@ def in_colab():
     return _in_colab
 
 def make_joystick(*args, **kwargs):
+    """
+    Make a joystick appropriate for your environment.
+
+    Args:
+        scale: the scaling of translate and rotate values; defaults (1.0, 1.0)
+        width: width of the widget; default 250
+        height: height of the widget; default 250
+        function: the function to call when changing joystick; default print
+    """
     if in_colab():
         return NoJoystick(*args, **kwargs)
     elif has_ipycanvas():

@@ -42,11 +42,18 @@ def has_ipywidgets():
 class Joystick():
     def __init__(self, scale=(1.0, 1.0), width=250, height=250, function=print):
         """
+        A dynamic joystick drawn on a Canvas.
+
         Args:
-            scale: (translate_scale, rotate_scale)
+            scale: the scaling of translate and rotate values; defaults (1.0, 1.0)
+            width: width of the widget; default 250
+            height: height of the widget; default 250
+            function: the function to call when changing joystick; default print
         """
         self.translate_scale = scale[0]
         self.rotate_scale = scale[1]
+        self.last_translate = 0
+        self.last_rotate = 0
         self.state = "up"
         self.width = width
         self.height = height
@@ -72,10 +79,9 @@ class Joystick():
 
     def handle_mouse_move(self, x, y):
         if self.state == "down":
-            self.function(((self.height/2 - y) / (self.height/2))
-                          * self.translate_scale,
-                          ((self.width/2 - x) / (self.width/2))
-                          * self.rotate_scale)
+            self.last_translate = ((self.height/2 - y) / (self.height/2)) * self.translate_scale
+            self.last_rotate = ((self.width/2 - x) / (self.width/2)) * self.rotate_scale
+            self.function(self.last_translate, self.last_rotate)
             with hold_canvas(self.canvas):
                 self.clear()
                 self.canvas.stroke_style = "black"
@@ -100,11 +106,15 @@ class Joystick():
 
     def handle_mouse_up(self, x, y):
         self.state = "up"
+        self.last_translate = 0
+        self.last_rotate = 0
         self.function(0, 0)
         self.reset()
 
     def reset(self):
         # translate, rotate
+        self.last_translate = 0
+        self.last_rotate = 0
         self.function(0, 0)
         self.clear()
         self.canvas.fill_style = "black"
@@ -120,13 +130,18 @@ class Joystick():
 class NoJoystick():
     def __init__(self, scale=(1.0, 1.0), width=250, height=250, function=print):
         """
-        FIXME: width and height are currently ignored.
+        A simple joystick via buttons and sliders.
 
         Args:
-            scale: (translate_scale, rotate_scale)
+            scale: the scaling of translate and rotate values; defaults (1.0, 1.0)
+            function: the function to call when changing joystick; default print
+            width: width of the widget (ignored)
+            height: height of the widget (ignored)
         """
         self.translate_scale = scale[0]
         self.rotate_scale = scale[1]
+        self.last_translate = 0
+        self.last_rotate = 0
 
         self.function = function
         self.arrows = [
@@ -190,10 +205,12 @@ class NoJoystick():
                                    names='value')
 
     def on_translate_change(self, change):
-        self.function(change['new'] * self.translate_scale, None)
+        self.last_translate = change['new'] * self.translate_scale
+        self.function(self.last_translate, None)
 
     def on_rotate_change(self, change):
-        self.function(None, -change['new'] * self.rotate_scale)
+        self.last_rotate = -change['new'] * self.rotate_scale
+        self.function(None, self.last_rotate)
 
     def create_move(self, row, col):
         def on_click(button):
