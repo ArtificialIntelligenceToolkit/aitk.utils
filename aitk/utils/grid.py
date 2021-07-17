@@ -29,8 +29,8 @@ class Grid(object):
             # Greate a 20x30 grid with world
             >>> grid = Grid((20, 30), world)
         """
-        self.border_line_color = Color("white")
-        self.fill_color = Color("white", 100)
+        self.border_line_color = Color("white", 128)
+        self.fill_color = Color("white", 64)
         self.grid_size = grid_size
         if isinstance(world, (list, tuple)):
             self.world = None

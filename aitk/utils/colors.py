@@ -1159,7 +1159,7 @@ class Color:
                 hex_string = COLOR_NAMES.get(red, "#00000000")
                 red, green, blue, alpha = self.hex_to_rgba(hex_string)
             if _alpha is not None:
-                alpha = alpha
+                alpha = _alpha
         elif isinstance(red, (list, tuple)):
             if len(red) == 3:
                 red, green, blue = red
