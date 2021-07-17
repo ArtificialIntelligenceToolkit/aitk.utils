@@ -17,6 +17,9 @@ class Grid(object):
         The grid is stored in (x, y) or (col, row) order with origin at
         top left corner.
 
+        The sequence traveled is the order of (x, y) of the first time
+        visits to each grid location.
+
         Args:
             grid_size ((int, int)): the (width, height) of the grid
             world (World, or (int, int)): the world, or (width, height) of the world
@@ -38,13 +41,27 @@ class Grid(object):
         else:
             self.world = world
             self.world_size = (world.width, world.height)
+        self.reset()
+
+    def reset(self):
+        self.sequence = []
         self.grid = []
         for i in range(self.grid_size[0]):
             self.grid.append([0] * self.grid_size[1])
 
+    def get_sequence(self, pad_value=None, total_length=None):
+        """
+        Return the sequence traveled.
+        """
+        if pad_value is not None and total_length is not None:
+            pad_count = total_length - len(self.sequence)
+            return self.sequence + [pad_value] * pad_count
+        else:
+            return self.sequence
+
     def get_xy(self, x, y):
         """
-        Given an (x, y) point in the world, return the 
+        Given an (x, y) point in the world, return the
         (x, y) grid location.
         """
         x_size = self.world_size[0] / self.grid_size[0]
@@ -59,6 +76,8 @@ class Grid(object):
         Update the appropriate grid location.
         """
         row, col = self.get_xy(x, y)
+        if self.grid[row][col] == 0:
+            self.sequence.append((col, row))
         self.grid[row][col] += 1
 
     def show(self):
