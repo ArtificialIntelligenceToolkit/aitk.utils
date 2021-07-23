@@ -106,30 +106,6 @@ def image_to_data(img_src, format="PNG"):
         data = data.decode("latin1")
     return "data:image/%s;base64,%s" % (format, html.escape(data))
 
-def show_images(images, which=None, rows=2, cols=5):
-    # which can be an index number like 0 or a sequence like [0, 2, 4] or range(10)
-    if which is None:
-        # defaults to all images
-        which = range(len(images))
-    elif type(which) is int:
-        which = [which]
-    elif type(which) not in (tuple, list, range):
-        print("Please specify a range of image indices")
-        return
-    plt.figure(figsize=(3*cols,3*rows))  # (width, height) in inches
-    k = 0
-    for i in which:
-        if 0 <= i < len(images):
-            k += 1
-            plt.subplot(rows, cols, k)
-            plt.title('{}'.format(i))
-            plt.axis('off')
-            plt.imshow(images[i])
-            if k == rows*cols:
-                break
-    if k == 0:
-        print("No such image")
-
 def gallery(images, labels=None, border_width=1, background_color=(255, 255, 255),
             return_type="display", clear=True, gallery_shape=None):
     """
