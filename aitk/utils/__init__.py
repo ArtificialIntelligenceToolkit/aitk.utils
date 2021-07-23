@@ -11,7 +11,7 @@
 import os
 
 from ._version import __version__
-from .utils import gallery
+from .utils import gallery, array_to_image
 from .joystick import Joystick, NoJoystick, has_ipywidgets, has_ipycanvas
 from .datasets import get_dataset
 from .colors import Color
