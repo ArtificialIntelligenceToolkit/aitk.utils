@@ -106,19 +106,27 @@ def image_to_data(img_src, format="PNG"):
         data = data.decode("latin1")
     return "data:image/%s;base64,%s" % (format, html.escape(data))
 
-def gallery(images, labels=None, border_width=1, background_color=(255, 255, 255),
+def gallery(images, labels="{index}", border_width=1, background_color=(255, 255, 255),
             return_type="display", clear=True, gallery_shape=None):
     """
     Construct a gallery of images.
 
     Args:
         images (sequence of Image): sequence of PIL Images
-        labels (str or sequence): optional
+        labels (str or sequence): optional, default "{index}"
         border_width (int): border around images
         background_color (list or tuple of 3 int): optional, represents RGB
         return_type (str): "display" or None
         clear (bool): if format is None, then clear the display output
         gallery_shape (sequence of 2 int): optional, (cols, rows)
+
+    The labels argument can be a string containing the following special patterns
+    that will be replaced:
+
+    * "{index}" - the 0-based index of the item
+    * "{count}" - index + 1
+    * "{row}" - the row of the item
+    * "{col}" - the column of the item
     """
     try:
         import PIL.Image
@@ -172,7 +180,7 @@ def gallery(images, labels=None, border_width=1, background_color=(255, 255, 255
             table += '<tr style="padding: %dpx">' % border_width
             for col in range(gallery_cols):
                 if index < len(labels):
-                    label = labels[index].format(**{
+                    label = str(labels[index]).format(**{
                         "count": index + 1, "index": index, "row": row, "col": col})
                     table += '<td style="text-align: center; padding: %dpx">%s<br/>' % (border_width, label)
                     table += '<img src="%s" alt="%s" title="%s"></img>' % (image_to_data(images[index]), label, label)
