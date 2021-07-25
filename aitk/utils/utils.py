@@ -109,16 +109,19 @@ def image_to_data(img_src, format="PNG"):
 def gallery(images, labels="{index}", border_width=1, background_color=(255, 255, 255),
             return_type="display", clear=True, gallery_shape=None):
     """
-    Construct a gallery of images.
+    Construct a gallery (grid) of images. Can return an HTML table of images
+    or a single Image.
 
     Args:
-        images (sequence of Image): sequence of PIL Images
+        images (sequence of Image or an array): sequence of PIL Images or arrays.
+            If arrays, they will be processed by array_to_image()
         labels (str or sequence): optional, default "{index}"
         border_width (int): border around images
-        background_color (list or tuple of 3 int): optional, represents RGB
+        background_color (list or tuple of 3 int): optional, represents RGB.
         return_type (str): "display" or None
         clear (bool): if format is None, then clear the display output
-        gallery_shape (sequence of 2 int): optional, (cols, rows)
+        gallery_shape (sequence of 2 int): optional, (cols, rows). One of
+            row or col may be None, in order to set one of the dimensions.
 
     The labels argument can be a string containing the following special patterns
     that will be replaced:
@@ -127,6 +130,11 @@ def gallery(images, labels="{index}", border_width=1, background_color=(255, 255
     * "{count}" - index + 1
     * "{row}" - the row of the item
     * "{col}" - the column of the item
+
+    If labels is not None, then gallery() will create a single image. If return_type
+    is None then it will return the image rather than display it.
+
+    If clear is True, then the output will be cleared before displaying.
     """
     try:
         import PIL.Image
@@ -135,11 +143,21 @@ def gallery(images, labels="{index}", border_width=1, background_color=(255, 255
         print("gallery() requires Pillow (Python Image Library) and IPython")
         return
 
-    if gallery_shape is None:
+    if len(images) == 0:
+        return None
+
+    if ((gallery_shape is None) or
+        (len(gallery_shape) == 2 and
+         (gallery_shape[0] is None) and
+         (gallery_shape[1] is None))):
         gallery_cols = math.ceil(math.sqrt(len(images)))
         gallery_rows = math.ceil(len(images) / gallery_cols)
     else:
         gallery_cols, gallery_rows = gallery_shape
+        if gallery_cols is None:
+            gallery_cols = math.ceil(len(images) / gallery_rows)
+        elif gallery_rows is None:
+            gallery_rows = math.ceil(len(images) / gallery_cols)
 
     # check that all images are images:
     _images = []
