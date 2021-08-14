@@ -218,3 +218,22 @@ def gallery(images, labels="{index}", border_width=1, background_color=(255, 255
         display(output)
     else:
         return output
+
+def progress_bar(range, show_progress=True, progress_type="tqdm"):
+    """
+    Wrap a range/iter in a progress bar (or not).
+    """
+    try:
+        import tqdm
+        import tqdm.notebook
+    except ImportError:
+        tqdm = None
+
+    if progress_type is None or tqdm is None or show_progress is False:
+        return range
+    elif progress_type == "tqdm":
+        return tqdm.tqdm(range)
+    elif progress_type == "notebook":
+        return tqdm.notebook.tqdm(range)
+    else:
+        return range
