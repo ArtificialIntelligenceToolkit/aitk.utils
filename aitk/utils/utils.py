@@ -84,6 +84,13 @@ def rescale_array(array, old_range, new_range, dtype):
     Given a numpy array in an old_range, rescale it
     into new_range, and make it an array of dtype.
     """
+    try:
+        import numpy
+    except ImportError as exc:
+        raise Exception(
+            "The Python library numpy is required for rescaling array"
+        ) from exc
+
     old_min, old_max = old_range
     if array.min() < old_min or array.max() > old_max:
         ## truncate:
