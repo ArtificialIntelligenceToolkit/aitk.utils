@@ -13,6 +13,7 @@ import os
 from ._version import __version__
 from .utils import gallery, array_to_image, progress_bar
 from .joystick import Joystick, NoJoystick, has_ipywidgets, has_ipycanvas
+from .joypad import JoyPad
 from .datasets import get_dataset
 from .colors import Color
 from .grid import Grid
