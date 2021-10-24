@@ -12,6 +12,7 @@ import math
 import base64
 import html
 import io
+import sys
 
 try:
     from IPython.display import clear_output, display
@@ -240,7 +241,8 @@ def progress_bar(range, show_progress=True, progress_type="tqdm"):
         return range
     elif progress_type == "tqdm":
         return tqdm.tqdm(range)
-    elif progress_type == "notebook":
+    elif ((progress_type == "notebook") and
+          (sys.platform != "emscripten")):
         return tqdm.notebook.tqdm(range)
     else:
         return range
