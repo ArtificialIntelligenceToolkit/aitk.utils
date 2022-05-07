@@ -12,6 +12,7 @@ import math
 import base64
 import html
 import io
+import os
 import sys
 
 try:
@@ -246,3 +247,34 @@ def progress_bar(range, show_progress=True, progress_type="tqdm"):
         return tqdm.notebook.tqdm(range)
     else:
         return range
+
+def images_to_movie(*frames, movie_name="aitk_movie", start=0, stop=None,
+                    step=0.1, loop=0, duration=100, mp4=True):
+    """
+    Save as animated gif and optionally mp4; show with controls.
+    loop - 0 means continually
+    duration - in MS
+    """
+    if stop is None:
+        stop = len(frames) * 0.1
+
+    stop = min(stop, len(frames) * 0.1)
+
+    # First, save animated gif:
+    frames[0].save(
+        movie_name + ".gif",
+        save_all=True,
+        append_images=frames[1:],
+        loop=loop,
+        duration=duration,
+    )
+    if mp4:
+        retval = os.system(
+            """ffmpeg -y -v quiet -nostats -hide_banner -loglevel error -i {0}.gif -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" {0}.mp4""".format(
+                movie_name
+            )
+        )
+        if retval != 0:
+            print(
+                "created animated gif, but error running ffmpeg; see console log message or use mp4=False in the future"
+            )

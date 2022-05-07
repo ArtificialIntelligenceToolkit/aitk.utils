@@ -11,7 +11,7 @@
 import os
 
 from ._version import __version__
-from .utils import gallery, array_to_image, progress_bar
+from .utils import gallery, array_to_image, progress_bar, images_to_movie
 from .joystick import Joystick, NoJoystick, has_ipywidgets, has_ipycanvas
 from .joypad import JoyPad
 from .datasets import get_dataset
