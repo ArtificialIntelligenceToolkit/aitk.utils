@@ -29,7 +29,8 @@ def get_dataset(dataset=None):
 
     Args:
         dataset (str): one of "digits6x6", "dogs-vs-cats",
-            "dogs", "cats", "dogs-vs-cats-100"
+            "dogs", "cats", "dogs-vs-cats-100", "gridfonts",
+            "figure-ground-a"
 
     Examples:
     ```python
@@ -46,6 +47,8 @@ def get_dataset(dataset=None):
             "dogs",
             "dogs-vs-cats",
             "dogs-vs-cats-100",
+            "gridfonts",
+            "figure-ground-a",
         ]
     get = None
     if dataset == "digits6x6":
@@ -60,6 +63,10 @@ def get_dataset(dataset=None):
         from .dogs_vs_cats import get_dogs as get
     elif dataset == "dogs-vs-cats-100":
         from .dogs_vs_cats_100 import get_dogs_vs_cats_100 as get
+    elif dataset == "gridfonts":
+        from .gridfonts import get
+    elif dataset == "figure-ground-a":
+        from .gridfonts import get_figure_ground_a as get
     else:
         raise Exception("unknown dataset name")
     return get()
