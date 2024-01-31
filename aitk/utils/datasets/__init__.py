@@ -49,10 +49,13 @@ def get_dataset(dataset=None):
             "dogs-vs-cats-100",
             "gridfonts",
             "figure-ground-a",
+            "validate_6x6",
         ]
     get = None
     if dataset == "digits6x6":
         from .digits6x6 import get
+    elif dataset == "validate_6x6":
+        from .validate_6x6 import get
     elif dataset == "dogs-vs-cats":
         from .dogs_vs_cats import get
     elif dataset == "dogs":
