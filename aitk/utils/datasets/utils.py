@@ -286,7 +286,7 @@ class Dataset():
             if i in indices:
                 yield array[i]
 
-    def query_train(self, contains=None, not_contains=None):
+    def query_train(self, compare_in="or", includes=None, compare_ex="or", excludes=None):
         """
         Select items from the train set.
         
@@ -296,21 +296,31 @@ class Dataset():
 
         Returns a Dataset with selected rows.
         """
-        if contains is None:
-            contains = []
-        if not_contains is None:
-            not_contains = []
+        if includes is None:
+            includes = []
+        if excludes is None:
+            excludes = []
 
-        if not isinstance(contains, list) or not isinstance(not_contains, list):
-            raise Exception("query_test requires lists of features")
+        if not isinstance(includes, list) or not isinstance(excludes, list):
+            raise Exception("includes and excludes must be lists")
 
         indices = []
             
         for i in range(len(self.train_inputs)):
             features = self.train_features[i]
-            if (all([f in features for f in contains]) and
-                not any([f in features for f in not_contains])):
-                indices.append(i)
+            if compare_in == "or":
+                include = any([f in features for f in includes])
+            elif compare_in == "and":
+                include = all([f in features for f in includes])
+
+            if include:
+                if compare_ex == "or":
+                    include = not any([f in features for f in excludes])
+                elif compare_ex == "and":
+                    include = not all([f in features for f in excludes])
+
+                if include:
+                    indices.append(i)
         
         return Dataset(
             list(self.select(self.train_inputs, indices)),
@@ -318,31 +328,41 @@ class Dataset():
             list(self.select(self.train_features, indices)),
         )
 
-    def query_test(self, contains=None, not_contains=None):
+    def query_test(self, compare_in="or", includes=None, compare_ex="or", excludes=None):
         """
         Select items from the test set.
         
         Args:
-            contains: a list of features that a row must contain (AND)
-            not_contains: a list of features that a row must not contain (OR)
+            contains: a list of features that a row must contain
+            not_contains: a list of features that a row must not contain
 
         Returns a Dataset with selected rows.
         """
-        if contains is None:
-            contains = []
-        if not_contains is None:
-            not_contains = []
+        if includes is None:
+            includes = []
+        if excludes is None:
+            excludes = []
 
-        if not isinstance(contains, list) or not isinstance(not_contains, list):
-            raise Exception("query_test requires lists of features")
+        if not isinstance(includes, list) or not isinstance(excludes, list):
+            raise Exception("includes and excludes must be lists")
 
         indices = []
             
         for i in range(len(self.test_inputs)):
             features = self.test_features[i]
-            if (all([f in features for f in contains]) and
-                not any([f in features for f in not_contains])):
-                indices.append(i)
+            if compare_in == "or":
+                include = any([f in features for f in includes])
+            elif compare_in == "and":
+                include = all([f in features for f in includes])
+
+            if include:
+                if compare_ex == "or":
+                    include = not any([f in features for f in excludes])
+                elif compare_ex == "and":
+                    include = not all([f in features for f in excludes])
+
+                if include:
+                    indices.append(i)
         
         return Dataset(
             test_inputs=list(self.select(self.test_inputs, indices)),
