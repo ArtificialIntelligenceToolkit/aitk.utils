@@ -50,6 +50,7 @@ def get_dataset(dataset=None):
             "gridfonts",
             "figure-ground-a",
             "validate_6x6",
+            "cmu-faces"
         ]
     get = None
     if dataset == "digits6x6":
@@ -70,6 +71,8 @@ def get_dataset(dataset=None):
         from .gridfonts import get
     elif dataset == "figure-ground-a":
         from .gridfonts import get_figure_ground_a as get
+    elif dataset == "cmu-faces":
+        from .cmu_faces import get
     else:
         raise Exception("unknown dataset name")
     return get()

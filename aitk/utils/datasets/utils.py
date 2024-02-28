@@ -263,3 +263,89 @@ def validate_file(fpath, file_hash, algorithm="auto", chunk_size=65535):
         return True
     else:
         return False
+
+class Dataset():
+    def __init__(
+            self,
+            train_inputs=None,
+            train_targets=None,
+            train_features=None,
+            test_inputs=None,
+            test_targets=None,
+            test_features=None,
+    ):
+        self.train_inputs = train_inputs or []
+        self.train_targets = train_targets or []
+        self.train_features = train_features or []
+        self.test_inputs = test_inputs or []
+        self.test_targets = test_targets or []
+        self.test_features = test_features or []
+
+    def select(self, array, indices):
+        for i in range(len(array)):
+            if i in indices:
+                yield array[i]
+
+    def query_train(self, contains=None, not_contains=None):
+        """
+        Select items from the train set.
+        
+        Args:
+            contains: a list of features that a row must contain (OR)
+            not_contains: a list of features that a row must not contain (OR)
+
+        Returns a Dataset with selected rows.
+        """
+        if contains is None:
+            contains = []
+        if not_contains is None:
+            not_contains = []
+
+        if not isinstance(contains, list) or not isinstance(not_contains, list):
+            raise Exception("query_test requires lists of features")
+
+        indices = []
+            
+        for i in range(len(self.train_inputs)):
+            features = self.train_features[i]
+            if (all([f in features for f in contains]) and
+                not any([f in features for f in not_contains])):
+                indices.append(i)
+        
+        return Dataset(
+            list(self.select(self.train_inputs, indices)),
+            list(self.select(self.train_targets, indices)),
+            list(self.select(self.train_features, indices)),
+        )
+
+    def query_test(self, contains=None, not_contains=None):
+        """
+        Select items from the test set.
+        
+        Args:
+            contains: a list of features that a row must contain (AND)
+            not_contains: a list of features that a row must not contain (OR)
+
+        Returns a Dataset with selected rows.
+        """
+        if contains is None:
+            contains = []
+        if not_contains is None:
+            not_contains = []
+
+        if not isinstance(contains, list) or not isinstance(not_contains, list):
+            raise Exception("query_test requires lists of features")
+
+        indices = []
+            
+        for i in range(len(self.test_inputs)):
+            features = self.test_features[i]
+            if (all([f in features for f in contains]) and
+                not any([f in features for f in not_contains])):
+                indices.append(i)
+        
+        return Dataset(
+            test_inputs=list(self.select(self.test_inputs, indices)),
+            test_targets=list(self.select(self.test_targets, indices)),
+            test_features=list(self.select(self.test_features, indices)),
+        )
