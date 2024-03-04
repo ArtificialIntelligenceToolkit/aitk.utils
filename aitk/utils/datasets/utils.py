@@ -350,16 +350,24 @@ class Dataset():
             
         for i in range(len(self.test_inputs)):
             features = self.test_features[i]
-            if compare_in == "or":
-                include = any([f in features for f in includes])
-            elif compare_in == "and":
-                include = all([f in features for f in includes])
+            if includes is not None:
+                if compare_in == "or":
+                    include = any([f in features for f in includes])
+                elif compare_in == "and":
+                    include = all([f in features for f in includes])
+                else:
+                    raise Exception("compare_in must be `or`, or `and`")
+            else:
+                include = True
 
             if include:
-                if compare_ex == "or":
-                    include = not any([f in features for f in excludes])
-                elif compare_ex == "and":
-                    include = not all([f in features for f in excludes])
+                if excludes is not None:
+                    if compare_ex == "or":
+                        include = not any([f in features for f in excludes])
+                    elif compare_ex == "and":
+                        include = not all([f in features for f in excludes])
+                    else:
+                        raise Exception("compare_ex must be `or`, or `and`")
 
                 if include:
                     indices.append(i)
