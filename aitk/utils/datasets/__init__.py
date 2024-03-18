@@ -30,12 +30,16 @@ def get_dataset(dataset=None):
     Args:
         dataset (str): one of "digits6x6", "dogs-vs-cats",
             "dogs", "cats", "dogs-vs-cats-100", "gridfonts",
-            "figure-ground-a"
+            "figure-ground-a", "cmu-faces", "cmu-faces-full",
+            "cmu-faces-half", "cmu-faces-quarter",
+            "validate_6x6"
 
     Examples:
     ```python
     >>> get_dataset()
-    ["cats", "digits6x6", "dogs", "dogs-vs-cats", "dogs-vs-cats-100"]
+    ["cats", "digits6x6", "dogs", "dogs-vs-cats", "dogs-vs-cats-100",
+     "gridfonts", "figure-ground-a", "cmu-faces", "cmu-faces-full",
+     "cmu-faces-half", "cmu-faces-quarter", "validate_6x6"]
 
     >>> dataset = get_dataset("dogs")
     ```
@@ -50,7 +54,10 @@ def get_dataset(dataset=None):
             "gridfonts",
             "figure-ground-a",
             "validate_6x6",
-            "cmu-faces"
+            "cmu-faces",
+            "cmu-faces-full",
+            "cmu-faces-half",
+            "cmu-faces-quarter",
         ]
     get = None
     if dataset == "digits6x6":
@@ -71,8 +78,12 @@ def get_dataset(dataset=None):
         from .gridfonts import get
     elif dataset == "figure-ground-a":
         from .gridfonts import get_figure_ground_a as get
-    elif dataset == "cmu-faces":
-        from .cmu_faces import get
+    elif dataset in ["cmu-faces", "cmu-faces-full"]:
+        from .cmu_faces import get_full as get
+    elif dataset == "cmu-faces-half":
+        from .cmu_faces import get_half as get
+    elif dataset == "cmu-faces-quarter":
+        from .cmu_faces import get_quarter as get
     else:
         raise Exception("unknown dataset name")
     return get()
